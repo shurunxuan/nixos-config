@@ -73,7 +73,6 @@
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
-  programs.git.enable = true;
 
   programs.zsh = {
     enable = true;
@@ -81,6 +80,16 @@
       enable = true;
       plugins = [ "git" ];
       theme = "ys";
+    };
+  };
+
+  programs.git = {
+    enable = true;
+    lfs.enable = true;
+    userName  = "Runxuan Shu";
+    userEmail = "shurunxuan@hotmail.com";
+    extraConfig = {
+      push = { autoSetupRemote = true; };
     };
   };
 
