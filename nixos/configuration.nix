@@ -152,6 +152,11 @@
 
   programs.zsh.enable = true;
 
+  environment.systemPackages = with pkgs; [
+    git
+    home-manager
+  ];
+
   # Enable automatic login for the user.
   services.xserver.displayManager.autoLogin.enable = true;
   services.xserver.displayManager.autoLogin.user = "shurunxuan";

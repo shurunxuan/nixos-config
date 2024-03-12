@@ -64,6 +64,7 @@
     zsh
     oh-my-zsh
     vscode.fhs
+    microsoft-edge
     (python3.withPackages (ps: with ps; [
       requests
       boto3
