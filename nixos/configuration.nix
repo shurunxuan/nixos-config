@@ -157,6 +157,15 @@
     shell = pkgs.zsh;
   };
 
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    liberation_ttf
+    fira-code
+    fira-code-symbols
+  ];
+
   programs.zsh.enable = true;
 
   environment.systemPackages = with pkgs; [
