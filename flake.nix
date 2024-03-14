@@ -14,6 +14,8 @@
     # TODO: Add any other flake you might need
     hardware.url = "github:nixos/nixos-hardware/master";
     ags.url = "github:Aylur/ags";
+    astal.url = "github:Aylur/astal";
+    matugen.url = "github:InioX/matugen";
 
     # Shameless plug: looking for a way to nixify your themes and make
     # everything match nicely? Try nix-colors!
@@ -26,6 +28,7 @@
     , home-manager
     , hardware
     , ags
+    , astal
     , ...
     } @ inputs:
     let
@@ -43,6 +46,7 @@
       # This is a function that generates an attribute by calling a function you
       # pass to it, with each system as an argument
       forAllSystems = nixpkgs.lib.genAttrs systems;
+      asztal = nixpkgs.legacyPackages."x86_64-linux".callPackage ./home-manager/ags { inherit inputs; };
     in
     {
       # Your custom packages
@@ -64,7 +68,7 @@
       # NixOS configuration entrypoint
       # Available through 'nixos-rebuild --flake .#your-hostname'
       nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs outputs username hostname; };
+        specialArgs = { inherit inputs outputs username hostname asztal; };
         modules = [
           # > Our main nixos configuration file <
           hardware.nixosModules.gpd-win-max-2-2023
@@ -76,10 +80,11 @@
       # Available through 'home-manager --flake .#your-username@your-hostname'
       homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = { inherit inputs outputs username; };
+        extraSpecialArgs = { inherit inputs outputs username asztal; };
         modules = [
           # > Our main home-manager configuration file <
           ags.homeManagerModules.default
+          astal.homeManagerModules.default
           ./home-manager/home.nix
         ];
       };

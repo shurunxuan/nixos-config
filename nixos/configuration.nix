@@ -7,6 +7,7 @@
 , pkgs
 , username
 , hostname
+, asztal
 , ...
 }: {
   # You can import other NixOS modules here
@@ -145,6 +146,15 @@
     enable = true;
     powerOnBoot = false;
     settings.General.Experimental = true;
+  };
+
+  services.greetd = {
+    enable = true;
+    settings.default_session.command = pkgs.writeShellScript "greeter" ''
+      export XKB_DEFAULT_LAYOUT=${config.services.xserver.xkb.layout}
+      export XCURSOR_THEME=Qogir
+      ${asztal}/bin/greeter
+    '';
   };
 
   services.upower.enable = true;

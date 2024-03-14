@@ -34,7 +34,7 @@ in
     settings = {
       "$terminal" = "kitty";
       "$fileManager" = "nautilus";
-      "$menu" = "ags -t applauncher";
+      "$menu" = "ags -t launcher";
 
       # See https://wiki.hyprland.org/Configuring/Monitors/
       monitor = ",preferred,auto,2";
@@ -63,7 +63,7 @@ in
         touchpad = {
           natural_scroll = true;
           disable_while_typing = true;
-          drag_lock = true;
+          drag_lock = false;
         };
 
         sensitivity = 0; # -1.0 to 1.0, 0 means no modification.
@@ -186,6 +186,7 @@ in
         # Example special workspace (scratchpad)
         "$mod, S, togglespecialworkspace, magic"
         "$mod SHIFT, S, movetoworkspace, special:magic"
+        "$mod, Tab, exec, ags -t overview"
 
         # Scroll through existing workspaces with mainMod + scroll
         "$mod, mouse_down, workspace, e+1"

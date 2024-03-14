@@ -19,6 +19,7 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
+    ./ags.nix
     ./hyprland.nix
     ./theme.nix
   ];
@@ -99,16 +100,6 @@
     extraConfig = {
       push = { autoSetupRemote = true; };
     };
-  };
-
-  programs.ags = {
-    enable = true;
-    configDir = ./ags;
-    extraPackages = with pkgs; [
-      gtksourceview
-      webkitgtk
-      accountsservice
-    ];
   };
 
   # Nicely reload system units when changing configs
