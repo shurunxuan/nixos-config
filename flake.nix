@@ -13,6 +13,7 @@
 
     # TODO: Add any other flake you might need
     hardware.url = "github:nixos/nixos-hardware/master";
+    ags.url = "github:Aylur/ags";
 
     # Shameless plug: looking for a way to nixify your themes and make
     # everything match nicely? Try nix-colors!
@@ -24,6 +25,7 @@
     , nixpkgs
     , home-manager
     , hardware
+    , ags
     , ...
     } @ inputs:
     let
@@ -75,6 +77,7 @@
         extraSpecialArgs = { inherit inputs outputs; };
         modules = [
           # > Our main home-manager configuration file <
+          ags.homeManagerModules.default
           ./home-manager/home.nix
         ];
       };

@@ -10,8 +10,7 @@
 let
   hyprlandStartupScript = pkgs.pkgs.writeShellScriptBin "start" ''
     swww init ; swww img ~/Pictures/600091.png &
-    waybar & 
-    dunst
+    ags
   '';
 in
 {
@@ -77,18 +76,14 @@ in
       requests
       boto3
     ]))
-    (waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-    }))
-    eww
-    dunst
     libnotify
     swww
     kitty
     rofi-wayland
     gnome.nautilus
-    libsForQt5.qt5ct
-    libsForQt5.qtstyleplugin-kvantum
+    adwaita-qt6
+    qt6Packages.qt6ct
+    neofetch
   ];
 
   # Enable home-manager and git
@@ -119,7 +114,7 @@ in
     settings = {
       "$terminal" = "kitty";
       "$fileManager" = "nautilus";
-      "$menu" = "rofi -show drun -show-icons";
+      "$menu" = "ags -t applauncher";
 
       # See https://wiki.hyprland.org/Configuring/Monitors/
       monitor = ",preferred,auto,2";
@@ -133,7 +128,7 @@ in
       # Some default env vars.
       env = [
         "XCURSOR_SIZE,48"
-        "QT_QPA_PLATFORMTHEME,qt5ct" # change to qt6ct if you have that
+        "QT_QPA_PLATFORMTHEME,qt6ct" # change to qt6ct if you have that
       ];
 
       # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
@@ -287,7 +282,21 @@ in
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
       ];
+      bindel = [
+        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+      ];
     };
+  };
+
+  programs.ags = {
+    enable = true;
+    configDir = ./ags;
+    extraPackages = with pkgs; [
+      gtksourceview
+      webkitgtk
+      accountsservice
+    ];
   };
 
   # home.pointerCursor = {
@@ -301,13 +310,8 @@ in
   gtk = {
     enable = true;
     theme = {
-      name = "Catppuccin-Macchiato-Compact-Pink-Dark";
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "pink" ];
-        size = "compact";
-        tweaks = [ "rimless" "black" ];
-        variant = "macchiato";
-      };
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
     };
   };
   # gtk = {
