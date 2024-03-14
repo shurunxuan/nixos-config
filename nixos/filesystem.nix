@@ -12,7 +12,7 @@
     ];
   };
 
-  fileSystems."home/${username}/SDCard" = {
+  fileSystems."/home/${username}/SDCard" = {
     device = "/dev/disk/by-partuuid/a16d8284-4e44-41d5-b837-b6e56d208b47";
     fsType = "exfat";
     options = [
