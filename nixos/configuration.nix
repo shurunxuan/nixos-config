@@ -176,6 +176,12 @@
 
   programs.zsh.enable = true;
 
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [ "shurunxuan" ];
+  };
+
   environment.systemPackages = with pkgs; [
     git
     home-manager

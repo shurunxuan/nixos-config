@@ -73,7 +73,6 @@ in
     nixpkgs-fmt
     vscode.fhs
     microsoft-edge
-    _1password-gui
     (python3.withPackages (ps: with ps; [
       requests
       boto3
