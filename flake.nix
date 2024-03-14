@@ -12,7 +12,7 @@
     };
 
     # TODO: Add any other flake you might need
-    # hardware.url = "github:nixos/nixos-hardware";
+    hardware.url = "github:nixos/nixos-hardware/master";
 
     # Shameless plug: looking for a way to nixify your themes and make
     # everything match nicely? Try nix-colors!
@@ -23,6 +23,7 @@
     self,
     nixpkgs,
     home-manager,
+    hardware,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -60,6 +61,7 @@
       specialArgs = {inherit inputs outputs;};
       modules = [
         # > Our main nixos configuration file <
+        hardware.nixosModules.gpd-win-max-2-2023
         ./nixos/configuration.nix
       ];
     };
