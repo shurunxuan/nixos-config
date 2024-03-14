@@ -170,8 +170,11 @@ in
 
         blur = {
           enabled = true;
-          size = 3;
+          size = 8;
           passes = 1;
+          brightness = 0.5;
+          vibrancy = 0.5;
+          noise = 0.2;
         };
 
         drop_shadow = true;
@@ -230,7 +233,11 @@ in
       # Example windowrule v2
       # windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
       # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
-      windowrulev2 = "suppressevent maximize, class:.*"; # You'll probably like this.
+      windowrulev2 = [
+        "suppressevent maximize, class:.*"
+        "opacity 0.9 0.8, class:(kitty)"
+        "opacity 0.95 1, class:(code-url-handler)"
+      ];
 
       # See https://wiki.hyprland.org/Configuring/Keywords/ for more
       "$mod" = "SUPER";
