@@ -5,6 +5,8 @@
 , lib
 , config
 , pkgs
+, username
+, hostname
 , ...
 }: {
   # You can import other NixOS modules here
@@ -21,91 +23,37 @@
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
+
+    ./nix.nix
+    ./filesystem.nix
+    ./time-region.nix
+    ./audio.nix
   ];
-
-  nixpkgs = {
-    # You can add overlays here
-    # overlays = [
-    #   # Add overlays your own flake exports (from overlays and pkgs dir):
-    #   outputs.overlays.additions
-    #   outputs.overlays.modifications
-    #   outputs.overlays.unstable-packages
-
-    #   # You can also add overlays exported from other flakes:
-    #   # neovim-nightly-overlay.overlays.default
-
-    #   # Or define it inline, for example:
-    #   # (final: prev: {
-    #   #   hi = final.hello.overrideAttrs (oldAttrs: {
-    #   #     patches = [ ./change-hello-to-hi.patch ];
-    #   #   });
-    #   # })
-    # ];
-    # Configure your nixpkgs instance
-    config = {
-      # Disable if you don't want unfree packages
-      allowUnfree = true;
-    };
-  };
 
   # This will add each flake input as a registry
   # To make nix3 commands consistent with your flake
   nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
-  # This will additionally add your inputs to the system's legacy channels
-  # Making legacy nix commands consistent as well, awesome!
-  nix.nixPath = [ "/etc/nix/path" ];
-  environment.etc =
-    lib.mapAttrs'
-      (name: value: {
-        name = "nix/path/${name}";
-        value.source = value.flake;
-      })
-      config.nix.registry;
-
-  nix.settings = {
-    # Enable flakes and new 'nix' command
-    experimental-features = "nix-command flakes";
-    # Deduplicate and optimize nix store
-    auto-optimise-store = true;
-  };
-
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
-  };
+  nixpkgs.config.allowUnfree = true;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 3;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.supportedFilesystems = [ "ntfs" ];
+  boot.tmp.cleanOnBoot = true;
 
-  fileSystems."/home/shurunxuan/DataDrive" = {
-    device = "/dev/disk/by-partuuid/11827cc7-ef8d-4a0f-8838-a1bd6c555870";
-    fsType = "ntfs-3g";
-    options = [
-      "rw"
-      "uid=1000"
-      "gid=100"
-      "umask=022"
-    ];
+  boot.plymouth = rec {
+    enable = true;
+    theme = "hexagon_dots_alt";
+    themePackages = with pkgs; [(
+      adi1090x-plymouth-themes.override {
+        selected_themes = [ theme ];
+      }
+    )];
   };
 
-  fileSystems."home/shurunxuan/SDCard" = {
-    device = "/dev/disk/by-partuuid/a16d8284-4e44-41d5-b837-b6e56d208b47";
-    fsType = "exfat";
-    options = [
-      "rw"
-      "uid=1000"
-      "gid=100"
-      "umask=022"
-    ];
-  };
-
-  networking.hostName = "NogiSonokoS"; # Define your hostname.
+  networking.hostName = hostname; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -115,26 +63,13 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "Asia/Shanghai";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
-
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  services.xserver = {
+    enable = true;
+    excludePackages = with pkgs; [
+      xterm
+    ];
+  };
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
@@ -154,28 +89,11 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
-
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.shurunxuan = {
+  users.users.${username} = {
     isNormalUser = true;
     description = "Runxuan Shu";
     extraGroups = [ "networkmanager" "wheel" ];
@@ -203,7 +121,7 @@
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;
-    polkitPolicyOwners = [ "shurunxuan" ];
+    polkitPolicyOwners = [ username ];
   };
 
   environment.systemPackages = with pkgs; [
@@ -217,7 +135,7 @@
 
   # Enable automatic login for the user.
   services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = "shurunxuan";
+  services.xserver.displayManager.autoLogin.user = username;
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
@@ -233,6 +151,12 @@
       # Use keys only. Remove if you want to SSH using password (not recommended)
       PasswordAuthentication = false;
     };
+  };
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = false;
+    settings.General.Experimental = true;
   };
 
   services.upower.enable = true;

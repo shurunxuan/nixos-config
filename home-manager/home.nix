@@ -5,6 +5,7 @@
 , lib
 , config
 , pkgs
+, username
 , ...
 }:
 {
@@ -50,8 +51,8 @@
 
   # TODO: Set your username
   home = {
-    username = "shurunxuan";
-    homeDirectory = "/home/shurunxuan";
+    username = username;
+    homeDirectory = "/home/${username}";
   };
 
   # Add stuff for your user as you see fit:
