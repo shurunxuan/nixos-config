@@ -7,12 +7,6 @@
 , pkgs
 , ...
 }:
-let
-  hyprlandStartupScript = pkgs.pkgs.writeShellScriptBin "start" ''
-    swww init ; swww img ~/Pictures/600091.png &
-    ags
-  '';
-in
 {
   # You can import other home-manager modules here
   imports = [
@@ -24,6 +18,7 @@ in
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
+    ./hyprland.nix
   ];
 
   nixpkgs = {
@@ -72,17 +67,13 @@ in
     nixpkgs-fmt
     vscode.fhs
     microsoft-edge
+    gnome.nautilus
+    adwaita-qt6
+    qt6Packages.qt6ct
     (python3.withPackages (ps: with ps; [
       requests
       boto3
     ]))
-    libnotify
-    swww
-    kitty
-    rofi-wayland
-    gnome.nautilus
-    adwaita-qt6
-    qt6Packages.qt6ct
     neofetch
   ];
 
@@ -105,196 +96,6 @@ in
     userEmail = "shurunxuan@hotmail.com";
     extraConfig = {
       push = { autoSetupRemote = true; };
-    };
-  };
-
-  wayland.windowManager.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-    settings = {
-      "$terminal" = "kitty";
-      "$fileManager" = "nautilus";
-      "$menu" = "ags -t applauncher";
-
-      # See https://wiki.hyprland.org/Configuring/Monitors/
-      monitor = ",preferred,auto,2";
-
-      # Execute your favorite apps at launch
-      exec-once = ''${hyprlandStartupScript}/bin/start'';
-
-      # Source a file (multi-file configs)
-      # source = ~/.config/hypr/myColors.conf
-
-      # Some default env vars.
-      env = [
-        "XCURSOR_SIZE,48"
-        "QT_QPA_PLATFORMTHEME,qt6ct" # change to qt6ct if you have that
-      ];
-
-      # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
-      input = {
-        kb_layout = "us";
-        kb_variant = "";
-        kb_model = "";
-        kb_options = "";
-        kb_rules = "";
-
-        follow_mouse = 1;
-
-        touchpad = {
-          natural_scroll = true;
-        };
-
-        sensitivity = 0; # -1.0 to 1.0, 0 means no modification.
-      };
-
-      general = {
-        # See https://wiki.hyprland.org/Configuring/Variables/ for more
-
-        gaps_in = 5;
-        gaps_out = 20;
-        border_size = 2;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
-
-        layout = "dwindle";
-
-        # Please see https://wiki.hyprland.org/Configuring/Tearing/ before you turn this on
-        allow_tearing = false;
-      };
-
-      decoration = {
-        # See https://wiki.hyprland.org/Configuring/Variables/ for more
-
-        rounding = 10;
-
-        blur = {
-          enabled = true;
-          size = 8;
-          passes = 1;
-          brightness = 0.5;
-          vibrancy = 0.5;
-          noise = 0.2;
-        };
-
-        drop_shadow = true;
-        shadow_range = 4;
-        shadow_render_power = 3;
-        "col.shadow" = "rgba(1a1a1aee)";
-      };
-
-      animations = {
-        enabled = true;
-
-        # Some default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
-
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-
-        animation = [
-          "windows, 1, 7, myBezier"
-          "windowsOut, 1, 7, default, popin 80%"
-          "border, 1, 10, default"
-          "borderangle, 1, 8, default"
-          "fade, 1, 7, default"
-          "workspaces, 1, 6, default"
-        ];
-      };
-
-      dwindle = {
-        # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
-        pseudotile = true; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-        preserve_split = true; # you probably want this
-      };
-
-      master = {
-        # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
-        new_is_master = true;
-      };
-
-      gestures = {
-        # See https://wiki.hyprland.org/Configuring/Variables/ for more
-        workspace_swipe = true;
-      };
-
-      misc = {
-        # See https://wiki.hyprland.org/Configuring/Variables/ for more
-        force_default_wallpaper = -1; # Set to 0 or 1 to disable the anime mascot wallpapers
-      };
-
-      # Example per-device config
-      # See https://wiki.hyprland.org/Configuring/Keywords/#executing for more
-      device = {
-        name = "epic-mouse-v1";
-        sensitivity = -0.5;
-      };
-
-      # Example windowrule v1
-      # windowrule = float, ^(kitty)$
-      # Example windowrule v2
-      # windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
-      # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
-      windowrulev2 = [
-        "suppressevent maximize, class:.*"
-        "opacity 0.9 0.8, class:(kitty)"
-        "opacity 0.95 1, class:(code-url-handler)"
-      ];
-
-      # See https://wiki.hyprland.org/Configuring/Keywords/ for more
-      "$mod" = "SUPER";
-
-      bind = [
-        # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-        "$mod, Q, exec, $terminal"
-        "$mod, C, killactive, "
-        "$mod, M, exit, "
-        "$mod, E, exec, $fileManager"
-        "$mod, V, togglefloating, "
-        "$mod, R, exec, $menu"
-        "$mod, P, pseudo, " # dwindle
-        "$mod, J, togglesplit, " # dwindle
-        # Move focus with mainMod + arrow keys
-        "$mod, left, movefocus, l"
-        "$mod, right, movefocus, r"
-        "$mod, up, movefocus, u"
-        "$mod, down, movefocus, d"
-        # Example special workspace (scratchpad)
-        "$mod, S, togglespecialworkspace, magic"
-        "$mod SHIFT, S, movetoworkspace, special:magic"
-
-        # Scroll through existing workspaces with mainMod + scroll
-        "$mod, mouse_down, workspace, e+1"
-        "$mod, mouse_up, workspace, e-1"
-
-        "$mod SHIFT, R, exec, ags -q; ags"
-      ] ++ (
-        # workspaces
-        # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
-        builtins.concatLists (builtins.genList
-          (
-            x:
-            let
-              ws =
-                let
-                  c = (x + 1) / 10;
-                in
-                builtins.toString (x + 1 - (c * 10));
-            in
-            [
-              "$mod, ${ws}, workspace, ${toString (x + 1)}"
-              "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
-            ]
-          )
-          10)
-      );
-      bindm = [
-        # Move/resize windows with mainMod + LMB/RMB and dragging
-        "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow"
-      ];
-      bindel = [
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-      ];
     };
   };
 
