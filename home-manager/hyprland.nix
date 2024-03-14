@@ -3,6 +3,7 @@ let
   hyprlandStartupScript = pkgs.pkgs.writeShellScriptBin "start" ''
     swww init ; swww img ~/Pictures/600091.png &
     ags
+    hyprctl setcursor Qogir 24
   '';
   wpctlBin = "${pkgs.wireplumber}/bin/wpctl";
   brightnessctlBin = "${pkgs.brightnessctl}/bin/brightnessctl";
@@ -46,7 +47,6 @@ in
 
       # Some default env vars.
       env = [
-        "XCURSOR_SIZE,48"
         "QT_QPA_PLATFORMTHEME,qt6ct" # change to qt6ct if you have that
       ];
 

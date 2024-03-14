@@ -20,6 +20,7 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     ./hyprland.nix
+    ./theme.nix
   ];
 
   nixpkgs = {
@@ -109,34 +110,6 @@
       accountsservice
     ];
   };
-
-  # home.pointerCursor = {
-  #   gtk.enable = true;
-  #   x11.enable = true;
-  #   package = pkgs.bibata-cursors;
-  #   name = "Bibata-Modern-Classic";
-  #   size = 16;
-  # };
-
-  gtk = {
-    enable = true;
-    theme = {
-      name = "adw-gtk3-dark";
-      package = pkgs.adw-gtk3;
-    };
-  };
-  # gtk = {
-  #   enable = true;
-  #   theme = {
-  #     package = pkgs.flat-remix-gtk;
-  #     name = "Flat-Remix-GTK-Grey-Darkest";
-  #   };
-
-  #   iconTheme = {
-  #     package = pkgs.gnome.adwaita-icon-theme;
-  #     name = "Adwaita";
-  #   };
-  # };
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
