@@ -1,7 +1,7 @@
 { inputs, pkgs, ... }:
 let
   hyprlandStartupScript = pkgs.pkgs.writeShellScriptBin "start" ''
-    swww init ; swww img ~/Pictures/600091.png &
+    swww init ; swww img ~/SDCard/600091.png &
     ags
     hyprctl setcursor Qogir 24
   '';
@@ -22,7 +22,7 @@ in
   xdg.desktopEntries."org.gnome.Settings" = {
     name = "Settings";
     comment = "GNOME Settings";
-    icon ="org.gnome.Settings";
+    icon = "org.gnome.Settings";
     exec = "env XDG_CURRENT_DESKTOP=gnome ${pkgs.gnome.gnome-control-center}/bin/gnome-control-center";
     categories = [ "X-Preferences" ];
     terminal = false;

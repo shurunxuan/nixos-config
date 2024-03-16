@@ -1,8 +1,8 @@
 { username, ... }: {
   boot.supportedFilesystems = [ "ntfs" ];
 
-  fileSystems."/home/${username}/DataDrive" = {
-    device = "/dev/disk/by-partuuid/11827cc7-ef8d-4a0f-8838-a1bd6c555870";
+  fileSystems."/home/${username}/Windows" = {
+    device = "/dev/disk/by-partuuid/083854a2-1467-4c8a-af38-489d1c077633";
     fsType = "ntfs-3g";
     options = [
       "rw"

@@ -22,6 +22,8 @@
     ./ags.nix
     ./hyprland.nix
     ./theme.nix
+    ./ssh.nix
+    ./git.nix
   ];
 
   nixpkgs = {
@@ -89,16 +91,6 @@
       enable = true;
       plugins = [ "git" ];
       theme = "ys";
-    };
-  };
-
-  programs.git = {
-    enable = true;
-    lfs.enable = true;
-    userName = "Runxuan Shu";
-    userEmail = "shurunxuan@hotmail.com";
-    extraConfig = {
-      push = { autoSetupRemote = true; };
     };
   };
 
