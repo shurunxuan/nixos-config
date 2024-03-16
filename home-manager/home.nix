@@ -24,6 +24,7 @@
     ./theme.nix
     ./ssh.nix
     ./git.nix
+    ./zsh.nix
   ];
 
   nixpkgs = {
@@ -84,15 +85,6 @@
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
-
-  programs.zsh = {
-    enable = true;
-    oh-my-zsh = {
-      enable = true;
-      plugins = [ "git" ];
-      theme = "ys";
-    };
-  };
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
