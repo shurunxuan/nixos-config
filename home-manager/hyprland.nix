@@ -1,7 +1,7 @@
 { inputs, pkgs, ... }:
 let
   hyprlandStartupScript = pkgs.pkgs.writeShellScriptBin "start" ''
-    swww init ; swww img ~/SDCard/600091.png &
+    swww init ; swww img ~/DataDrive/OneDrive/图片/wallpaper/yuyuyui/600091_UR_乃木園子_自由な心.png &
     ags
     hyprctl setcursor Qogir 24
   '';
