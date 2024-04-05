@@ -83,6 +83,7 @@
     neofetch
     unityhub
     awscli2
+    ffmpeg
   ];
 
   # Enable home-manager and git

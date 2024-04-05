@@ -37,7 +37,11 @@ in
       "$menu" = "ags -t launcher";
 
       # See https://wiki.hyprland.org/Configuring/Monitors/
-      monitor = ",preferred,auto,2";
+      monitor = ",highres,auto,2";
+
+      xwayland = {
+        force_zero_scaling = true;
+      };
 
       # Execute your favorite apps at launch
       exec-once = ''${hyprlandStartupScript}/bin/start'';
@@ -48,6 +52,7 @@ in
       # Some default env vars.
       env = [
         "QT_QPA_PLATFORMTHEME,qt6ct" # change to qt6ct if you have that
+        "GDK_SCALE,2"
       ];
 
       # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
