@@ -2,7 +2,7 @@
   boot.supportedFilesystems = [ "ntfs" ];
 
   fileSystems."/home/${username}/Windows" = {
-    device = "/dev/disk/by-partuuid/083854a2-1467-4c8a-af38-489d1c077633";
+    device = "/dev/disk/by-partuuid/6698b7c2-9675-4a8b-bf99-de7e84aaccc3";
     fsType = "ntfs-3g";
     options = [
       "rw"
@@ -12,9 +12,9 @@
     ];
   };
 
-  fileSystems."/home/${username}/SDCard" = {
-    device = "/dev/disk/by-partuuid/a16d8284-4e44-41d5-b837-b6e56d208b47";
-    fsType = "exfat";
+  fileSystems."/home/${username}/DataDrive" = {
+    device = "/dev/nvme1n1p1";
+    fsType = "ntfs-3g";
     options = [
       "rw"
       "uid=1000"

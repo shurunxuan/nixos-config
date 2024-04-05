@@ -81,6 +81,8 @@
       boto3
     ]))
     neofetch
+    unityhub
+    awscli2
   ];
 
   # Enable home-manager and git
