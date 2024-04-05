@@ -84,6 +84,7 @@
     unityhub
     awscli2
     ffmpeg
+    steam-run
   ];
 
   # Enable home-manager and git
